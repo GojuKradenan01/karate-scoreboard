@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Papan Skor Karate</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="scoreboard-container">
+    <div class="player-side" id="aka-side">
+      <h1 style="color: white;" class="player-name">Aka</h1>
+      <div class="score" id="aka-score">0</div>
+      <div class="penalty-section">
+        <div class="penalty-labels"><span>1C</span><span>2C</span><span>3C</span><span>HC</span><span>H</span></div>
+        <div class="penalty-dots">
+          <div class="dot" id="aka-c1"></div>
+          <div class="dot" id="aka-c2"></div>
+          <div class="dot" id="aka-c3"></div>
+          <div class="dot" id="aka-hc"></div>
+          <div class="dot" id="aka-h"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="center-info">
+      <div class="tatami-container">
+        <div class="senshu-indicator" id="senshu-left"></div>
+        <div class="tatami-box">Tatami <span class="tatami-number" id="tatami-number">1</span></div>
+        <div class="senshu-indicator" id="senshu-right"></div>
+      </div>
+      <div class="timer-box" id="timer">1:30</div>
+      <div class="penalty-footer">Penalty</div>
+    </div>
+
+    <div class="player-side" id="ao-side">
+      <h1 style="color: white;" class="player-name">Ao</h1>
+      <div class="score" id="ao-score">0</div>
+      <div class="penalty-section">
+        <div class="penalty-labels"><span>1C</span><span>2C</span><span>3C</span><span>HC</span><span>H</span></div>
+        <div class="penalty-dots">
+          <div class="dot" id="ao-c1"></div>
+          <div class="dot" id="ao-c2"></div>
+          <div class="dot" id="ao-c3"></div>
+          <div class="dot" id="ao-hc"></div>
+          <div class="dot" id="ao-h"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="fullscreen-btn" style="
+  position: fixed; top: 10px; right: 10px;
+  background: rgba(255,255,255,0.2);
+  color: white; border: none; padding: 10px 20px;
+  border-radius: 8px; cursor: pointer;">
+    ⛶ Fullscreen
+  </button>
+
+  <script>
+    const btn = document.getElementById('fullscreen-btn');
+
+    btn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        btn.textContent = '⛶ Exit'; // ubah ikon saat fullscreen
+        btn.style.fontSize = '14px';
+        btn.style.padding = '6px 12px';
+      } else {
+        document.exitFullscreen();
+        btn.textContent = '⛶ Fullscreen';
+        btn.style.fontSize = '16px';
+        btn.style.padding = '10px 20px';
+      }
+    });
+
+    // Kalau user keluar fullscreen pakai ESC
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        btn.textContent = '⛶ Fullscreen';
+        btn.style.fontSize = '16px';
+        btn.style.padding = '10px 20px';
+      }
+    });
+  </script>
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let lastWinner = null;
+    socket.on("state", state => {
+      document.getElementById("aka-score").innerText = state.aka.score;
+      document.getElementById("ao-score").innerText = state.ao.score;
+
+      document.getElementById("senshu-left").innerText = state.aka.senshu ? "Senshu" : "";
+      document.getElementById("senshu-right").innerText = state.ao.senshu ? "Senshu" : "";
+
+      ['aka', 'ao'].forEach(p => {
+        ['c1', 'c2', 'c3', 'hc', 'h'].forEach(x => {
+          const el = document.getElementById(`${p}-${x}`);
+          el.classList.toggle('active', !!state[p].penalties[x]);
+        });
+      });
+
+      document.getElementById("tatami-number").innerText = state.tatami;
+
+      const total = state.timer.minutes * 60 + state.timer.seconds;
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      const timer = document.getElementById("timer");
+      timer.innerText = `${m}:${s.toString().padStart(2, '0')}`;
+      if (total <= 15 && total > 0) { timer.classList.add("low-time"); } else { timer.classList.remove("low-time"); }
+
+
+      // Efek pemenang
+      document.getElementById("aka-score").classList.remove("blink");
+      document.getElementById("ao-score").classList.remove("blink");
+      document.getElementById("aka-side").classList.remove("winner");
+      document.getElementById("ao-side").classList.remove("winner");
+
+      if (state.winner === "aka") {
+        document.getElementById("aka-score").classList.add("blink");
+        document.getElementById("aka-side").classList.add("winner");
+      } else if (state.winner === "ao") {
+        document.getElementById("ao-score").classList.add("blink");
+        document.getElementById("ao-side").classList.add("winner");
+      }
+
+    });
+
+
+  </script>
+</body>
+
+</html>

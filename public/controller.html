@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontrol Papan Skor Karate</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .controller-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .control-section {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .control-section button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .general-controls {
+            grid-column: 1 / -1;
+        }
+
+        .player-controls h2 {
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #aka-controls h2 {
+            background-color: #CC0000;
+        }
+
+        #ao-controls h2 {
+            background-color: #0000CC;
+        }
+
+        .score-controls button {
+            font-size: 1.2em;
+            width: 50px;
+        }
+
+        .penalty-controls button.active {
+            background-color: #ffc107;
+        }
+
+        a {
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 5px;
+            font-size: 1em;
+        }
+
+        hr {
+            margin: 15px 0;
+        }
+
+        /* Preview scoreboard */
+        .preview-section {
+            margin-top: 40px;
+            border-top: 3px solid #333;
+            padding-top: 20px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Panel Kontrol Papan Skor Karate</h1>
+    <a href="scoreboard.html" target="_blank">Buka Papan Skor di Tab Baru</a>
+
+    <div class="main-layout">
+        <!-- PREVIEW SCOREBOARD -->
+        <div class="preview-section">
+            <h2>Live Preview Scoreboard</h2>
+            <iframe src="scoreboard.html" width="100%" height="400px"
+                style="border-radius:8px;content: center; "></iframe>
+        </div>
+
+        <div class="controller-grid">
+            <div class="control-section general-controls">
+                <h2>Kontrol Umum</h2>
+                <div class="timer-controls">
+                    <button id="start-timer">START</button>
+                    <button id="stop-timer">STOP</button>
+                </div>
+                <div style="margin-top: 10px;">
+                    <label>Set Waktu:</label>
+                    <input type="number" id="minutes-input" value="1" min="0"> Menit
+                    <input type="number" id="seconds-input" value="30" min="0" max="59"> Detik
+                    <button id="set-timer">Set</button> <!-- Tombol baru -->
+                </div>
+                <hr>
+                <div>
+                    <label for="tatami-input">Tatami:</label>
+                    <input type="number" id="tatami-input" value="1" min="1" style="width: 50px;">
+                </div>
+                <hr>
+                <div>
+                    <button id="senshu-aka">Senshu AKA</button>
+                    <button id="senshu-ao">Senshu AO</button>
+                    <button id="hantei-aka">Hantei AKA</button>
+                    <button id="hantei-ao">Hantei AO</button>
+                    <button id="senshu-clear">Hapus Senshu</button>
+                </div>
+                <hr>
+                <button id="reset-all" style="background-color: #dc3545; color: white;">RESET SEMUA</button>
+            </div>
+
+            <div class="control-section player-controls" id="aka-controls">
+                <h2>Aka (Merah)</h2>
+                <div class="score-controls">
+                    <button id="aka-score-up1">+1</button>
+                    <button id="aka-score-up2">+2</button>
+                    <button id="aka-score-up3">+3</button>
+                    <button id="aka-score-down">-1</button>
+                </div>
+                <div class="penalty-controls">
+                    <p>Penalti:</p>
+                    <button id="aka-c1">1C</button>
+                    <button id="aka-c2">2C</button>
+                    <button id="aka-c3">3C</button>
+                    <button id="aka-hc">HC</button>
+                    <button id="aka-h">H</button>
+
+                </div>
+
+            </div>
+
+            <div class="control-section player-controls" id="ao-controls">
+                <h2>Ao (Biru)</h2>
+                <div class="score-controls">
+                    <button id="ao-score-up1">+1</button>
+                    <button id="ao-score-up2">+2</button>
+                    <button id="ao-score-up3">+3</button>
+                    <button id="ao-score-down">-1</button>
+                </div>
+                <div class="penalty-controls">
+                    <p>Penalti:</p>
+                    <button id="ao-c1">1C</button>
+                    <button id="ao-c2">2C</button>
+                    <button id="ao-c3">3C</button>
+                    <button id="ao-hc">HC</button>
+                    <button id="ao-h">H</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        function sendUpdate(data) {
+            socket.emit('update', data);
+        }
+
+        // Skor
+        ['aka', 'ao'].forEach(player => {
+            [1, 2, 3].forEach(val => {
+                document.getElementById(`${player}-score-up${val}`).addEventListener('click', () => {
+                    sendUpdate({ type: 'score', player, delta: val });
+                });
+            });
+            document.getElementById(`${player}-score-down`).addEventListener('click', () => {
+                sendUpdate({ type: 'score', player, delta: -1 });
+            });
+        });
+
+        // Senshu
+        document.getElementById('senshu-aka').addEventListener('click', () => sendUpdate({ type: 'senshu', value: 'aka' }));
+        document.getElementById('senshu-ao').addEventListener('click', () => sendUpdate({ type: 'senshu', value: 'ao' }));
+        document.getElementById('senshu-clear').addEventListener('click', () => sendUpdate({ type: 'senshu', value: 'none' }));
+
+        // Penalti
+        ['aka', 'ao'].forEach(player => {
+            ['c1', 'c2', 'c3', 'hc', 'h'].forEach(p => {
+                const btn = document.getElementById(`${player}-${p}`);
+                btn.addEventListener('click', () => {
+                    const active = !btn.classList.contains('active');
+                    btn.classList.toggle('active', active);
+                    sendUpdate({ type: 'penalty', player, penalty: p, active });
+                });
+            });
+        });
+
+        // Hantei
+        document.getElementById('hantei-aka').addEventListener('click', () => {
+            sendUpdate({ type: 'hantei', winner: 'aka' });
+        });
+        document.getElementById('hantei-ao').addEventListener('click', () => {
+            sendUpdate({ type: 'hantei', winner: 'ao' });
+        });
+
+
+        // Timer control
+        document.getElementById('start-timer').addEventListener('click', () => sendUpdate({ type: 'timer', value: { running: true } }));
+        document.getElementById('stop-timer').addEventListener('click', () => sendUpdate({ type: 'timer', value: { running: false } }));
+        document.getElementById('set-timer').addEventListener('click', () => {
+            const m = parseInt(document.getElementById('minutes-input').value);
+            const s = parseInt(document.getElementById('seconds-input').value);
+            sendUpdate({ type: 'timer', value: { minutes: m, seconds: s, running: false } });
+        });
+
+        // Tatami
+        document.getElementById('tatami-input').addEventListener('change', e => {
+            sendUpdate({ type: 'tatami', value: parseInt(e.target.value) });
+        });
+
+        // Reset semua
+        document.getElementById('reset-all').addEventListener('click', () => {
+            if (confirm('Yakin reset semua?')) sendUpdate({ type: 'reset' });
+        });
+    </script>
+</body>
+
+</html>

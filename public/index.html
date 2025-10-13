@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pilih Mode | Karate Scoreboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #1a1a1a, #0d0d0d 80%);
+      color: #f5f5f5;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    h1 {
+      font-size: 2.3rem;
+      margin-bottom: 50px;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #ffffff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+    }
+
+    button {
+      min-width: 220px;
+      padding: 18px 32px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(255, 255, 255, 0.15);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .controller {
+      background: rgba(255, 70, 70, 0.12);
+    }
+
+    .controller:hover {
+      background: rgba(255, 70, 70, 0.25);
+    }
+
+    .buttons button:first-child {
+      background: rgba(50, 150, 255, 0.12);
+    }
+
+    .buttons button:first-child:hover {
+      background: rgba(50, 150, 255, 0.25);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      color: #ccc;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      button {
+        width: 80%;
+        font-size: 1rem;
+      }
+      .buttons {
+        gap: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Karate Scoreboard System</h1>
+  <div class="buttons">
+    <button onclick="location.href='/scoreboard.html'">📺 Papan Skor</button>
+    <button class="controller" onclick="location.href='/controller.html'">🎮 Kontrol Pertandingan</button>
+  </div>
+  <footer>© 2025 Dojo SD Negeri Kradenan 01 Pekalongan — Sistem Skor Kumite Real-time</footer>
+</body>
+</html>

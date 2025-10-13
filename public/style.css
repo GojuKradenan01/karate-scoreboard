@@ -1,0 +1,333 @@
+/* Reset Dasar dan Pengaturan Font */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Arial Black', Gadget, sans-serif;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 20px;
+  color: black;
+}
+a[href="scoreboard.html"] {
+  display: block;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  color: blue;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+a[href="scoreboard.html"]:hover {
+  color: #99ccff;
+}
+
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1.9fr 2fr; /* kiri = preview, kanan = kontrol */
+  gap: 20px;
+  align-items: start;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: calc(100vh - 120px); /* biar pas 1 layar */
+}
+
+.preview-section {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  height: 95vh; /* sedikit lebih tinggi */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.preview-section h2 {
+  margin: 5px 0 10px 0;
+  text-align: center;
+}
+
+.preview-section iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 12px;
+  transform: none; /* hilangkan zoom scale */
+}
+
+
+
+/* Panel Kontrol */
+.controller-panel {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 15px;
+  height: 100%;
+  overflow-y: auto; /* scroll hanya di panel kanan kalau penuh */
+}
+
+.controller-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Container Utama Papan Skor */
+.scoreboard-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+#start-timer,
+#stop-timer {
+    font-size: 1.8rem;
+    /* Huruf besar */
+    padding: 50px 50px;
+    /* Tombol lebar & tinggi */
+    margin: 10px;
+    border: none;
+    border-radius: 12px;
+    /* Sudut membulat */
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#start-timer {
+    background-color: #28a745;
+    color: white;
+}
+
+#start-timer:hover {
+    background-color: #218838;
+}
+
+#stop-timer {
+    background-color: #dc3545;
+    color: white;
+}
+
+#stop-timer:hover {
+    background-color: #c82333;
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Sisi Pemain (Aka & Ao) */
+.player-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2vh 2vw;
+    box-sizing: border-box;
+}
+
+
+#aka-side {
+    background-color: #CC0000;
+}
+
+#ao-side {
+    background-color: #0000CC;
+}
+
+.player-name {
+    font-size: 10vh;
+    margin: 0;
+}
+
+.score {
+    font-size: 40vh;
+    line-height: 1;
+    font-weight: 900;
+}
+
+/* Bagian Penalti */
+.penalty-section {
+    width: 100%;
+    max-width: 500px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgb(63, 62, 62);
+    border-radius: 10px;
+    padding: 1vh;
+    box-sizing: border-box;
+}
+
+.penalty-labels,
+.penalty-dots {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.penalty-labels span {
+    font-size: 3vh;
+    width: 18%;
+    text-align: center;
+}
+
+.penalty-dots {
+    padding-top: 1vh;
+}
+
+.dot {
+    width: 5vh;
+    height: 5vh;
+    border: 1px solid rgb(63, 62, 62);
+    border-radius: 50%;
+    background-color: #333;
+}
+
+.dot.active {
+    background-color: #ffeb3b;
+}
+
+/* Informasi Tengah (Timer, Tatami) */
+.center-info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5vh;
+    z-index: 10;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+
+}
+
+.tatami-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 12;
+}
+
+.tatami-box {
+    background-color: white;
+    color: black;
+    padding: 2vh 3vw;
+    font-size: 5vh;
+    text-shadow: none;
+    border-radius: 12px;
+    min-width: 8vw;
+    text-align: center;
+    line-height: 1.2;
+    font-weight: bold;
+
+    display: flex;
+    flex-direction: column;
+    /* ubah jadi vertikal */
+    align-items: center;
+    /* center horizontal */
+    justify-content: center;
+    /* center vertical */
+}
+
+.tatami-number {
+    font-size: 12vh;
+    /* lebih besar dari teks Tatami */
+    font-weight: bold;
+    line-height: 1;
+    margin-top: 0.5vh;
+    /* beri sedikit jarak dari tulisan “Tatami” */
+}
+
+
+/* BARU: Gaya untuk Indikator Senshu */
+.senshu-indicator {
+    min-width: 150px;
+    /* Lebar minimum agar tidak terlalu kecil */
+    text-align: center;
+    margin: 0 15px;
+    font-size: 4.5vh;
+    font-weight: bold;
+    color: white;
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 0.5vh 1.5vw;
+}
+
+/* Sembunyikan jika kosong */
+.senshu-indicator:empty {
+    visibility: hidden;
+}
+
+
+/* BARU: Gaya untuk Timer Box */
+.timer-box {
+    background-color: white;
+    color: black;
+    font-size: clamp(12vh, 24vw, 22vh); /* fleksibel sesuai layar */
+    padding: 3vh 2vw; /* kotak lebih kecil, rapat */
+    border-radius: 15px;
+    min-width: auto; /* biar lebar menyesuaikan isi */
+    text-align: center;
+    text-shadow: none;
+    line-height: 1;
+    font-weight: 900; /* biar angka tebal dan kuat */
+    display: inline-block; /* supaya ukuran mengikuti isi */
+    margin-bottom: 5vh;
+}
+
+
+/* BARU: Class untuk waktu hampir habis */
+.timer-box.low-time {
+    color: red;
+}
+
+
+.penalty-footer {
+    position: relative;
+    /* sebelumnya absolute */
+    margin-top: 15vh;
+    /* beri jarak dari timer */
+    font-size: 4vh;
+    color: #ccc;
+    text-shadow: 1px 1px 2px black;
+}
+
+/* --- Efek kedip untuk pemenang --- */
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+.blink {
+    animation: blink 0.8s infinite;
+}
